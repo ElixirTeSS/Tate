@@ -144,5 +144,8 @@ module Tate
         end
       EOS
     end
+    require File.join(File.dirname(__FILE__), "acts_as_annotatable")
+    ActiveRecord::Base.send(:include, Annotations::Acts::Annotatable)
+
   end
 end

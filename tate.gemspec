@@ -9,9 +9,9 @@ Gem::Specification.new do |s|
   s.version     = Tate::VERSION
   s.authors     = ["Niall Beard"]
   s.email       = ["niallbeard@gmail.com"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of Tate."
-  s.description = "TODO: Description of Tate."
+  s.homepage    = ""
+  s.summary     = "Summary of Tate."
+  s.description = "Description of Tate."
   s.license     = "MIT"
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
