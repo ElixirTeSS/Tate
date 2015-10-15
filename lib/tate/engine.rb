@@ -144,8 +144,20 @@ module Tate
         end
       EOS
     end
+
+    require File.join(File.dirname(__FILE__), "annotations_version_fu")
+
     require File.join(File.dirname(__FILE__), "acts_as_annotatable")
-    ActiveRecord::Base.send(:include, Annotations::Acts::Annotatable)
+    ActiveRecord::Base.send(:include, Tate::Annotations::Acts::Annotatable)
+
+    require File.join(File.dirname(__FILE__), "acts_as_annotation_source")
+    ActiveRecord::Base.send(:include, Tate::Annotations::Acts::AnnotationSource)
+
+    require File.join(File.dirname(__FILE__), "acts_as_annotation_value")
+    ActiveRecord::Base.send(:include, Tate::Annotations::Acts::AnnotationValue)
+
+
+
 
   end
 end

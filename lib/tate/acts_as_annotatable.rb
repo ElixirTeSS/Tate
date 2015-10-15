@@ -1,4 +1,5 @@
 # ActsAsAnnotatable
+module Tate
 module Annotations
   module Acts #:nodoc:
     module Annotatable #:nodoc:
@@ -44,7 +45,7 @@ module Annotations
 
           options[:include] = [ :value ] if include_values
 
-          Annotation.find(:all, options)
+          Tate::Annotation.find(:all, options)
         end
 
         # Helper finder to get all annotations for all objects of the mixin annotatable type, by the source specified.
@@ -61,7 +62,7 @@ module Annotations
 
           options[:include] = [ :value ] if include_values
 
-          Annotation.find(:all, options)
+          Tate::Annotation.find(:all, options)
         end
       end
 
@@ -86,7 +87,7 @@ module Annotations
 
           options[:include] = [ :value ] if include_values
 
-          Annotation.find(:all, options)
+          Tate::Annotation.find(:all, options)
         end
 
         # Finder to get annotations with a specific attribute.
@@ -107,7 +108,7 @@ module Annotations
 
           options[:include] = [ :value ] if include_values
 
-          Annotation.find(:all, options)
+          Tate::Annotation.find(:all, options)
         end
 
         # Same as the {obj}.annotations_with_attribute method (above) but
@@ -129,7 +130,7 @@ module Annotations
 
           options[:include] = [ :value ] if include_values
 
-          Annotation.find(:all, options)
+          Tate::Annotation.find(:all, options)
         end
 
         # Finder to get annotations with a specific attribute by a specific source.
@@ -153,7 +154,7 @@ module Annotations
 
           options[:include] = [ :value ] if include_values
 
-          Annotation.find(:all, options)
+          Tate::Annotation.find(:all, options)
         end
 
         # Finder to get all annotations on this object excluding those that
@@ -177,7 +178,7 @@ module Annotations
 
           options[:include] = [ :value ] if include_values
 
-          Annotation.find(:all, options)
+          Tate::Annotation.find(:all, options)
         end
 
         # Returns the number of annotations on this annotatable object by the source type specified.
@@ -211,7 +212,7 @@ module Annotations
               val = [ val ].flatten
               val.each do |val_inner|
                 unless val_inner.blank?
-                  ann = self.annotations.new(:attribute_name => attrib,
+                  ann = Tate::Annotation.new(:attribute_name => attrib,
                                              :source_type => source.class.name,
                                              :source_id => source.id)
 
@@ -267,4 +268,5 @@ module Annotations
 
     end
   end
+end
 end
