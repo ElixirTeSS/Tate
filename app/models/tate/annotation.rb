@@ -143,7 +143,7 @@ module Tate
 
   def attribute_name=(attr_name)
     attr_name = attr_name.to_s.strip
-    self.attribute = AnnotationAttribute.find_or_create_by_name(attr_name)
+    self.attribute = Tate::AnnotationAttribute.find_or_create_by({name: attr_name})
   end
 
   alias_method :original_set_value=, :value=
@@ -162,7 +162,7 @@ module Tate
     annotations = [ ]
     errors = [ ]
 
-    annotatable = Annotation.find_annotatable(params[:annotatable_type], params[:annotatable_id])
+    annotatable = Tate::Annotation.find_annotatable(params[:annotatable_type], params[:annotatable_id])
 
     if annotatable
       values = params[:value]
@@ -275,7 +275,7 @@ module Tate
   # -----------
 
   def check_annotatable
-    if Annotation.find_annotatable(self.annotatable_type, self.annotatable_id).nil?
+    if Tate::Annotation.find_annotatable(self.annotatable_type, self.annotatable_id).nil?
       self.errors.add(:annotatable_id, "doesn't exist")
       return false
     else
@@ -284,7 +284,7 @@ module Tate
   end
 
   def check_source
-    if Annotation.find_source(self.source_type, self.source_id).nil?
+    if Tate::Annotation.find_source(self.source_type, self.source_id).nil?
       self.errors.add(:source_id, "doesn't exist")
       return false
     else
@@ -341,7 +341,7 @@ module Tate
       max = options[0]
       can_replace = options[1]
 
-      unless (found_annotatable = Annotation.find_annotatable(self.annotatable_type, self.annotatable_id)).nil?
+      unless (found_annotatable = Tate::Annotation.find_annotatable(self.annotatable_type, self.annotatable_id)).nil?
         anns = found_annotatable.annotations_with_attribute_and_by_source(attr_name, self.source)
 
         if anns.length >= max

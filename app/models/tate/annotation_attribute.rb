@@ -1,12 +1,12 @@
 module Tate
   class AnnotationAttribute < ActiveRecord::Base
   validates_presence_of :name,
-                        :identifier
+                        :id
 
   validates_uniqueness_of :name,
                           :case_sensitive => false
 
-  validates_uniqueness_of :identifier,
+  validates_uniqueness_of :id,
                           :case_sensitive => false
 
   has_many :annotations,
@@ -27,13 +27,13 @@ module Tate
   #     Tate::Engine::default_attribute_identifier_template, where '%s' in the template will be replaced with
   #     the transformation of 'name' through the Proc specified by Tate::Engine::attribute_name_transform_for_identifier.
   def set_identifier
-    unless self.name.blank? or !self.identifier.blank?
+    unless self.name.blank? or !self.id.blank?
       if self.name.match(/^<.+>$/)
-        self.identifier = self.name[1, self.name.length-1].chop
+        self.id = self.name[1, self.name.length-1].chop
       elsif self.name.match(/^http:\/\//) or self.name.match(/^urn:/)
-        self.identifier = self.name
+        self.id = self.name
       else
-        self.identifier = (Tate::Engine::default_attribute_identifier_template % Tate::Engine::attribute_name_transform_for_identifier.call(self.name))
+        self.id = (Tate::Engine::default_attribute_identifier_template % Tate::Engine::attribute_name_transform_for_identifier.call(self.name))
       end
     end
   end
