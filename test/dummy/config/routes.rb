@@ -1,4 +1,4 @@
 Rails.application.routes.draw do
-  resource :books
+  resources :books
   mount Tate::Engine => "/tate"
 end
