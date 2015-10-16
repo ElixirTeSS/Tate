@@ -212,7 +212,7 @@ module Annotations
               val = [ val ].flatten
               val.each do |val_inner|
                 unless val_inner.blank?
-                  ann = Tate::Annotation.new(:attribute_name => attrib,
+                  ann = self.annotations.new(:attribute_name => attrib,
                                              :source_type => source.class.name,
                                              :source_id => source.id)
 
