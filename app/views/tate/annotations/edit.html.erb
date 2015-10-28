@@ -2,11 +2,10 @@
 
 <% form_for(@annotation) do |f| %>
     <%= f.error_messages %>
-
     <p>
       <%= f.submit "Update" %>
     </p>
 <% end %>
 
 <%= link_to 'Show', @annotation %> |
-<%= link_to 'Back', annotations_path %>
+<%= link_to 'Back', tate.annotations_path %>
