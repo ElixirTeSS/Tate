@@ -49,23 +49,29 @@ class AnnotationsController < ApplicationController
   # POST /annotations
   # POST /annotations.xml
   def create
-    if params[:annotation][:source_type].blank? and params[:annotation][:source_id].blank?
+    parameters = get_annotation_params(params)
+
+    if parameters[:source_type].blank? and parameters[:source_id].blank?
       if logged_in?
-        params[:annotation][:source_type] = current_user.class.name
-        params[:annotation][:source_id] = current_user.id
+        parameters[:source_type] = current_user.name
+        parameters[:source_id] = current_user.id
       end
     end
-
-    @annotation = Tate::Annotation.new(params[:annotation])
-    @annotation.annotatable = @annotatable
+    @annotation = Tate::Annotation.new(:attribute_name => parameters[:attribute_],
+                                       :value => parameters[:value],
+                                       :source_type => parameters[:source_type],
+                                       :source_id => parameters[:source_id],
+                                       :annotatable_type => parameters[:annotatable_type],
+                                       :annotatable_id => parameters[:annotatable_id])
 
     respond_to do |format|
-      if @annotation.save
+      if @annotation.save!
         flash[:notice] = 'Annotation was successfully created.'
         format.html { redirect_to :back }
         format.xml  { render :xml => @annotation, :status => :created, :location => @annotation }
       else
-        format.html { render :action => "new" }
+        flash[:error] = 'Annotation could not be added'
+        format.html { redirect_to @annotation  }
         format.xml  { render :xml => @annotation.errors, :status => :unprocessable_entity }
       end
     end
@@ -129,6 +135,14 @@ class AnnotationsController < ApplicationController
     end
   end
 
+  private
+
+  def get_annotation_params(params)
+    params.require(:annotation).permit(:annotatable_id, :annotatable_type,
+                                       :source_id, :source_type, :user,
+                                       :text_value, :text, :value, :annotation, :attribute_)
+  end
+
   protected
 
   def find_annotation
@@ -136,6 +150,7 @@ class AnnotationsController < ApplicationController
   end
 
   def find_annotatable
+    puts params
     @annotatable = nil
 
     if params[:annotation]
