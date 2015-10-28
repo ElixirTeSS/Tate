@@ -6,6 +6,12 @@ module Tate
 
     acts_as_annotation_value :content_field => :text
 
+    before_validation :init
+
+    def init
+      self.version = 1
+    end
+
     belongs_to :version_creator,
                :class_name => "::#{Tate::Engine.user_model_name}"
 
