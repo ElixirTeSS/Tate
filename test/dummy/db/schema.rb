@@ -52,7 +52,7 @@ ActiveRecord::Schema.define(version: 20151013161807) do
     t.integer  "annotatable_id",                                      null: false
     t.integer  "attribute_id",                                        null: false
     t.string   "old_value"
-    t.string   "value_type",         limit: 50, default: "TextValue", null: false
+    t.string   "value_type",         limit: 50, default: "Tate::TextValue", null: false
     t.integer  "value_id",                      default: 0,           null: false
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -67,7 +67,7 @@ ActiveRecord::Schema.define(version: 20151013161807) do
     t.integer  "annotatable_id",                                      null: false
     t.integer  "attribute_id",                                        null: false
     t.string   "old_value"
-    t.string   "value_type",         limit: 50, default: "TextValue", null: false
+    t.string   "value_type",         limit: 50, default: "Tate::TextValue", null: false
     t.integer  "value_id",                      default: 0,           null: false
     t.integer  "version",                                             null: false
     t.integer  "version_creator_id"

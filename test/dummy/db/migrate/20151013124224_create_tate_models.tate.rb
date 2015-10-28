@@ -8,7 +8,7 @@ class CreateTateModels < ActiveRecord::Migration
         t.integer   :annotatable_id,      :null => false
         t.integer   :attribute_id,        :null => false
         t.string    :old_value,           :null => true
-        t.string    :value_type,          :limit => 50, :null => false, :default => "TextValue"
+        t.string    :value_type,          :limit => 50, :null => false, :default => "Tate::TextValue"
         t.integer   :value_id,            :null => false, :default => 0
         t.integer   :version,             :null => false
         t.integer   :version_creator_id,  :null => true
@@ -30,7 +30,7 @@ class CreateTateModels < ActiveRecord::Migration
         t.integer   :annotatable_id,      :null => false
         t.integer   :attribute_id,        :null => false
         t.string      :old_value,              :null => true
-        t.string    :value_type,          :limit => 50, :null => false, :default => "TextValue"
+        t.string    :value_type,          :limit => 50, :null => false, :default => "Tate::TextValue"
         t.integer   :value_id,            :null => false, :default => 0
         t.timestamps
       end

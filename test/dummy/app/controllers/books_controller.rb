@@ -8,6 +8,13 @@ class BooksController < ApplicationController
 
   # GET /books/1
   def show
+    @annotations = @book.annotations
+    @new_annotation = Tate::Annotation.new
+    @new_annotation.annotatable = @book
+    if !User.first
+      User.create(:name => 'bob', :email => "bob@hotmail.com")
+    end
+    @current_user = User.first
   end
 
   # GET /books/new
