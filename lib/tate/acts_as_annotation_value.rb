@@ -55,18 +55,17 @@ module Annotations
           return false unless annotation.value.is_a?(self)
 
           val_table_name = self.table_name
-
-          existing = Tate::Annotation.find(:all,
-                                     :joins => "INNER JOIN annotation_attributes ON annotation_attributes.id = annotations.attribute_id
-                                                INNER JOIN #{val_table_name} ON annotations.value_type = '#{self.name}' AND #{val_table_name}.id = annotations.value_id",
-                                     :conditions => [ "annotations.annotatable_type = ? AND
-                                                       annotations.annotatable_id = ? AND
-                                                       annotation_attributes.name = ? AND
+          existing = Tate::Annotation.joins(
+              "INNER JOIN tate_annotation_attributes ON tate_annotation_attributes.id = tate_annotations.attribute_id
+              INNER JOIN #{val_table_name} ON tate_annotations.value_type = '#{self.name}' AND
+                         #{val_table_name}.id = tate_annotations.value_id").where("tate_annotations.annotatable_type = ? AND
+                                                       tate_annotations.annotatable_id = ? AND
+                                                       tate_annotation_attributes.name = ? AND
                                                        #{val_table_name}.#{self.ann_value_content_field} = ?",
-                                                      annotation.annotatable_type,
-                                                      annotation.annotatable_id,
-                                                      annotation.attribute_name,
-                                                      annotation.value.send(self.ann_value_content_field) ])
+              annotation.annotatable_type,
+                  annotation.annotatable_id,
+                  annotation.attribute_name,
+              annotation.value.send(self.ann_value_content_field))
 
           if existing.length == 0 || existing.first.id == annotation.id
             return false
