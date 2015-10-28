@@ -1,0 +1,11 @@
+<h3> Annotations </h3>
+<table>
+  <th>Count</th>
+  <th>Annotation</th>
+<% @annotations.each_with_index do | ann, i | %>
+  <tr>
+    <td><%= i+1 %></td>
+    <td><%= ann.value_content %></td>
+  </tr>
+<% end %>
+</table>
