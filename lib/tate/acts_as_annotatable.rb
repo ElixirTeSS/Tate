@@ -20,7 +20,8 @@ module Annotations
 
           has_many :annotations,
                    :as => :annotatable,
-                   :dependent => :destroy
+                   :dependent => :destroy,
+                   :class_name => Tate::Annotation
 
           __send__ :extend, SingletonMethods
           __send__ :include, InstanceMethods
@@ -45,7 +46,7 @@ module Annotations
 
           options[:include] = [ :value ] if include_values
 
-          Tate::Annotation.find(:all, options)
+          Tate::Annotation.find_all(options)
         end
 
         # Helper finder to get all annotations for all objects of the mixin annotatable type, by the source specified.
@@ -62,7 +63,7 @@ module Annotations
 
           options[:include] = [ :value ] if include_values
 
-          Tate::Annotation.find(:all, options)
+          Tate::Annotation.find_all(options)
         end
       end
 
@@ -87,7 +88,7 @@ module Annotations
 
           options[:include] = [ :value ] if include_values
 
-          Tate::Annotation.find(:all, options)
+          Tate::Annotation.find_all(options)
         end
 
         # Finder to get annotations with a specific attribute.
@@ -108,7 +109,7 @@ module Annotations
 
           options[:include] = [ :value ] if include_values
 
-          Tate::Annotation.find(:all, options)
+          Tate::Annotation.find_all(options)
         end
 
         # Same as the {obj}.annotations_with_attribute method (above) but
@@ -130,7 +131,7 @@ module Annotations
 
           options[:include] = [ :value ] if include_values
 
-          Tate::Annotation.find(:all, options)
+          Tate::Annotation.find_all(options)
         end
 
         # Finder to get annotations with a specific attribute by a specific source.
@@ -154,7 +155,7 @@ module Annotations
 
           options[:include] = [ :value ] if include_values
 
-          Tate::Annotation.find(:all, options)
+          Tate::Annotation.find_all(options)
         end
 
         # Finder to get all annotations on this object excluding those that
@@ -178,7 +179,7 @@ module Annotations
 
           options[:include] = [ :value ] if include_values
 
-          Tate::Annotation.find(:all, options)
+          Tate::Annotation.find_all(options)
         end
 
         # Returns the number of annotations on this annotatable object by the source type specified.
