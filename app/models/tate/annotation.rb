@@ -9,6 +9,7 @@ module Tate
              :polymorphic => true
 
   belongs_to :value,
+             :class_name => "Tate::TextValue",
              :polymorphic => true,
              :autosave => true
 
@@ -20,6 +21,13 @@ module Tate
              :class_name => Tate::Engine.user_model_name
 
   before_validation :process_value_generation
+  before_validation :init
+
+  def init
+    self.version = 1
+  end
+
+
 
   validates_presence_of :source_type,
                         :source_id,
@@ -48,10 +56,11 @@ module Tate
                :polymorphic => true
 
     belongs_to :value,
+               :class_name => "Tate::TextValue",
                :polymorphic => true
 
     belongs_to :attribute_,
-               :class_name => "AnnotationAttribute",
+               :class_name => "Tate::AnnotationAttribute",
                :foreign_key => "attribute_id"
 
     belongs_to :version_creator,
@@ -103,7 +112,7 @@ module Tate
 
   # Finder to get all annotations with one of the given attribute_names.
   scope :with_attribute_names, lambda { |attrib_names|
-                               conditions = [attrib_names.collect{"annotation_attributes.name = ?"}.join(" or ")] | attrib_names
+                               conditions = [attrib_names.collect{"tate_annotation_attributes.name = ?"}.join(" or ")] | attrib_names
                                { :conditions => conditions,
                                  :joins => :attribute,
                                  :order => "created_at DESC" }
@@ -138,12 +147,12 @@ module Tate
   end
 
   def attribute_name
-    self.attribute.name
+    self.attribute_.name
   end
 
   def attribute_name=(attr_name)
     attr_name = attr_name.to_s.strip
-    self.attribute = Tate::AnnotationAttribute.find_or_create_by({name: attr_name})
+    self.attribute_ = Tate::AnnotationAttribute.find_or_create_by(name: attr_name)
   end
 
   alias_method :original_set_value=, :value=
@@ -171,7 +180,7 @@ module Tate
       params.delete("value")
 
       values.split(separator).each do |val|
-        ann = Annotation.new(params)
+        ann = Tate::Annotation.new(params)
         ann.value = val.strip
 
         if ann.save
@@ -208,9 +217,9 @@ module Tate
       # (as a fallback for default cases)
       case val
         when String, Symbol
-          val = TextValue.new :text => val.to_s
+          val = Tate::TextValue.new :text => val.to_s
         when Numeric
-          val = NumberValue.new :number => val
+          val = Tate::NumberValue.new :number => val
         when ActiveRecord::Base
           # Do nothing
         else
