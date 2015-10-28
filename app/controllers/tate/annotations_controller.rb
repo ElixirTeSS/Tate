@@ -53,7 +53,7 @@ class AnnotationsController < ApplicationController
 
     if parameters[:source_type].blank? and parameters[:source_id].blank?
       if logged_in?
-        parameters[:source_type] = current_user.name
+        parameters[:source_type] = current_user.class.name
         parameters[:source_id] = current_user.id
       end
     end
