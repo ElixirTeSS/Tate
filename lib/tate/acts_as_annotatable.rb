@@ -79,16 +79,14 @@ module Annotations
         def latest_annotations(limit=nil, include_values=false)
           obj_type = self.class.base_class.name
 
-          options = {
-              :conditions => { :annotatable_type =>  obj_type,
-                               :annotatable_id => self.id },
-              :order => "updated_at DESC",
-              :limit => limit
-          }
+          Tate::Annotation
+          .joins(:attribute_)
+          .where( :annotatable_type => obj_type,
+                  :annotatable_id => self.id)
+          .order(:updated_at => :desc)
+          .limit(limit)
+          #TODO: options[:include] = [ :value ] if include_values
 
-          options[:include] = [ :value ] if include_values
-
-          Tate::Annotation.find_all(options)
         end
 
         # Finder to get annotations with a specific attribute.
@@ -96,20 +94,14 @@ module Annotations
         # (MUST be a String representing the attribute's name).
         def annotations_with_attribute(attrib, include_values=false)
           return [] if attrib.blank?
-
           obj_type = self.class.base_class.name
-
-          options = {
-              :joins => :attribute,
-              :conditions => { :annotatable_type => obj_type,
-                               :annotatable_id => self.id,
-                               :annotation_attributes =>  { :name => attrib.strip.downcase } },
-              :order => "updated_at DESC"
-          }
-
-          options[:include] = [ :value ] if include_values
-
-          Tate::Annotation.find_all(options)
+          Tate::Annotation
+              .joins(:attribute_)
+              .where( :annotatable_type => obj_type,
+                      :annotatable_id => self.id,
+                      :tate_annotation_attributes => { :name => attrib.strip } )
+              .order(:updated_at => :desc)
+          #TODO: options[:include] = [ :value ] if include_values
         end
 
         # Same as the {obj}.annotations_with_attribute method (above) but
@@ -118,20 +110,14 @@ module Annotations
         # NOTE (1): the argument to this method MUST be an Array of Strings.
         def annotations_with_attributes(attribs, include_values=false)
           return [] if attribs.blank?
-
           obj_type = self.class.base_class.name
-
-          options = {
-              :joins => :attribute,
-              :conditions => { :annotatable_type => obj_type,
-                               :annotatable_id => self.id,
-                               :annotation_attributes =>  { :name => attribs } },
-              :order => "updated_at DESC"
-          }
-
-          options[:include] = [ :value ] if include_values
-
-          Tate::Annotation.find_all(options)
+          Tate::Annotation
+              .joins(:attribute_)
+              .where( :annotatable_type => obj_type,
+                       :annotatable_id => self.id,
+                       :tate_annotation_attributes => { :name => attribs } )
+              .order(:updated_at => :desc)
+          #TODO: options[:include] = [ :value ] if include_values
         end
 
         # Finder to get annotations with a specific attribute by a specific source.
@@ -143,19 +129,16 @@ module Annotations
 
           obj_type = self.class.base_class.name
 
-          options = {
-              :joins => :attribute,
-              :conditions => { :annotatable_type => obj_type,
-                               :annotatable_id => self.id,
-                               :source_type => source.class.name,
-                               :source_id => source.id,
-                               :annotation_attributes =>  { :name => attrib.strip.downcase } },
-              :order => "updated_at DESC"
-          }
-
-          options[:include] = [ :value ] if include_values
-
-          Tate::Annotation.find_all(options)
+          Tate::Annotation
+            .joins(:attribute_)
+            .where(
+                :annotatable_type => obj_type,
+                :annotatable_id => self.id,
+                :source_type => source.class.name,
+                :source_id => source.id,
+                :tate_annotation_attributes =>  { :name => attrib.strip }
+            ).order(:updated_at => :desc)
+            #TODO: options[:include] = [ :value ] if include_values
         end
 
         # Finder to get all annotations on this object excluding those that
