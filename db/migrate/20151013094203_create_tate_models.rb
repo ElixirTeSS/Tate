@@ -28,7 +28,7 @@ class CreateTateModels < ActiveRecord::Migration
         t.string    :annotatable_type,    :limit => 50, :null => false
         t.integer   :annotatable_id,      :null => false
         t.integer   :attribute_id,        :null => false
-        t.string      :old_value,              :null => true
+        t.string    :old_value,              :null => true
         t.string    :value_type,          :limit => 50, :null => false, :default => "Tate::TextValue"
         t.integer   :value_id,            :null => false, :default => 0
         t.timestamps
@@ -38,16 +38,16 @@ class CreateTateModels < ActiveRecord::Migration
 
       create_table :tate_annotation_attributes, :force => true do |t|
         t.string :name, :null => false
-
+        t.string :identifier, :null => false
         t.timestamps
       end
 
-      add_index :tate_annotation_attributes, [ :name ]
+      add_index :tate_annotation_attributes, [ :name, :identifier ]
 
       create_table :tate_annotation_value_seeds, :force => true do |t|
         t.integer :attribute_id,      :null => false
         t.string  :old_value,  :null => true
-        t.string  :annotation_attributes, :identifier, :string, :null => false
+        t.string  :tate_annotation_attributes, :identifier, :null => false
         t.string  :value_type, :limit => 50, :null => false, :default => "FIXME"
         t.integer :value_id, :null => false, :default => 0
 
