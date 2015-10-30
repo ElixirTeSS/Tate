@@ -5,7 +5,7 @@ class AnnotationsController < ApplicationController
   before_filter :login_required, :only => [ :new, :create, :edit, :update, :destroy, :create_multiple ]
 
   before_filter :find_annotation, :only => [ :show, :edit, :update, :destroy ]
-  before_filter :find_annotatable, :except => [ :show, :edit, :update, :destroy ]
+  before_filter :find_annotatable, :except => [ :destroy ]
   before_filter :authorise_action, :only =>  [ :edit, :update, :destroy ]
 
   # GET /annotations
@@ -57,12 +57,9 @@ class AnnotationsController < ApplicationController
         parameters[:source_id] = current_user.id
       end
     end
-    @annotation = Tate::Annotation.new(:attribute_name => parameters[:attribute_],
-                                       :value => parameters[:value],
-                                       :source_type => parameters[:source_type],
-                                       :source_id => parameters[:source_id],
-                                       :annotatable_type => parameters[:annotatable_type],
-                                       :annotatable_id => parameters[:annotatable_id])
+    parameters[:attribute_name] = parameters.delete(:attribute_)
+
+    @annotation = Tate::Annotation.new(parameters)
 
     respond_to do |format|
       if @annotation.save!
@@ -127,10 +124,9 @@ class AnnotationsController < ApplicationController
   # DELETE /annotations/1.xml
   def destroy
     @annotation.destroy
-
     respond_to do |format|
       flash[:notice] = 'Annotation successfully deleted.'
-      format.html { redirect_to :back }
+      format.html { redirect_to :back}
       format.xml  { head :ok }
     end
   end
@@ -139,8 +135,8 @@ class AnnotationsController < ApplicationController
 
   def get_annotation_params(params)
     params.require(:annotation).permit(:annotatable_id, :annotatable_type,
-                                       :source_id, :source_type, :user,
-                                       :text_value, :text, :value, :annotation, :attribute_)
+                                       :source_id, :source_type, :user, :attribute_,
+                                       :text_value, :text, :value, :annotation, :attribute_name)
   end
 
   protected
@@ -150,9 +146,7 @@ class AnnotationsController < ApplicationController
   end
 
   def find_annotatable
-    puts params
     @annotatable = nil
-
     if params[:annotation]
       @annotatable = Tate::Annotation.find_annotatable(params[:annotation][:annotatable_type], params[:annotation][:annotatable_id])
     end
