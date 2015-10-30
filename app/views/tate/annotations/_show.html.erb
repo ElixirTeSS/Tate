@@ -1,11 +1,19 @@
+
 <h3> Annotations </h3>
 <table>
   <th>Count</th>
   <th>Annotation</th>
+  <th>Annotation Attribute</th>
+  <th>Action</th>
 <% @annotations.each_with_index do | ann, i | %>
   <tr>
     <td><%= i+1 %></td>
     <td><%= ann.value_content %></td>
+    <td><%= ann.attribute_.name %></td>
+    <td><%= button_to 'Destroy', tate.annotation_path(ann),
+                    :method => :delete,
+                    :class => :destroy,
+                    :data => { :confirm => 'Are you sure?' } %></td>
   </tr>
 <% end %>
 </table>
