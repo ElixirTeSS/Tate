@@ -36,34 +36,27 @@ module Annotations
         # This is the same as object.annotations with the added benefit that the object doesnt have to be loaded.
         # E.g: Book.find_annotations_for(34) will give all annotations for the Book with ID 34.
         def find_annotations_for(id, include_values=false)
-          obj_type = self.class.base_class.name
+          obj_type = self.base_class.name
 
-          options = {
-              :conditions => { :annotatable_type =>  obj_type,
-                               :annotatable_id => id },
-              :order => "updated_at DESC"
-          }
+          Tate::Annotation
+          .where( :annotatable_type => obj_type,
+                  :annotatable_id => id)
+          .order(:updated_at => :desc)
+          #TODO: options[:include] = [ :value ] if include_values
 
-          options[:include] = [ :value ] if include_values
-
-          Tate::Annotation.find_all(options)
         end
 
         # Helper finder to get all annotations for all objects of the mixin annotatable type, by the source specified.
         # E.g: Book.find_annotations_by('User', 10) will give all annotations for all Books by User with ID 10.
         def find_annotations_by(source_type, source_id, include_values=false)
-          obj_type = self.class.base_class.name
+          obj_type = self.base_class.name
 
-          options = {
-              :conditions => { :annotatable_type =>  obj_type,
-                               :source_type => source_type,
-                               :source_id => source_id },
-              :order => "updated_at DESC"
-          }
-
-          options[:include] = [ :value ] if include_values
-
-          Tate::Annotation.find_all(options)
+          Tate::Annotation
+              .where( :annotatable_type => obj_type,
+                      :source_type => source_type,
+                      :source_id => source_id )
+              .order(:updated_at => :desc)
+          #TODO: options[:include] = [ :value ] if include_values
         end
       end
 
@@ -150,19 +143,14 @@ module Annotations
           return [] if attribs.blank?
 
           obj_type = self.class.base_class.name
+        Tate::Annotation
+          .joins(:attribute_)
+          .where(:annotatable_type => obj_type,
+                 :annotatable_id => id)
+          .where.not(:tate_annotation_attributes => {:name => attribs})
+          .order(:updated_at => :desc)
 
-          options = {
-              :joins => :attribute,
-              :conditions => [ "`annotations`.`annotatable_type` = ? AND `annotations`.`annotatable_id` = ? AND `annotation_attributes`.`name` NOT IN (?)",
-                               obj_type,
-                               self.id,
-                               attribs ],
-              :order => "`annotations`.`updated_at` DESC"
-          }
-
-          options[:include] = [ :value ] if include_values
-
-          Tate::Annotation.find_all(options)
+         #options[:include] = [ :value ] if include_values
         end
 
         # Returns the number of annotations on this annotatable object by the source type specified.
