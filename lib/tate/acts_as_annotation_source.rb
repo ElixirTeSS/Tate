@@ -28,6 +28,7 @@ module Annotations
           obj_type = self.base_class.name
 
           Tate::Annotation
+              .includes(:value)
               .where(:source_type =>  obj_type,
                      :source_id => id )
               .order(:updated_at => :desc)
@@ -42,11 +43,11 @@ module Annotations
           obj_type = self.base_class.name
 
           Tate::Annotation
+              .includes(:value)
               .where(:source_type => obj_type,
                      :annotatable_type =>  annotatable_type,
                      :annotatable_id => annotatable_id )
               .order(:updated_at => :desc)
- #         options[:include] = [ :value ] if include_values
         end
       end
 
@@ -55,11 +56,11 @@ module Annotations
         # Helper method to get latest annotations
         def latest_annotations(limit=nil, include_values=false)
           Tate::Annotation
+              .includes(:value)
               .where(:source_type =>  self.class.name,
                      :source_id => id  )
               .order(:updated_at => :desc)
               .limit(limit)
-          #options[:include] = [ :value ] if include_values
         end
 
         def annotation_source_name

@@ -39,11 +39,10 @@ module Annotations
           obj_type = self.base_class.name
 
           Tate::Annotation
-          .where( :annotatable_type => obj_type,
+              .includes(:value)
+              .where( :annotatable_type => obj_type,
                   :annotatable_id => id)
-          .order(:updated_at => :desc)
-          #TODO: options[:include] = [ :value ] if include_values
-
+              .order(:updated_at => :desc)
         end
 
         # Helper finder to get all annotations for all objects of the mixin annotatable type, by the source specified.
@@ -52,11 +51,11 @@ module Annotations
           obj_type = self.base_class.name
 
           Tate::Annotation
+              .includes(:value)
               .where( :annotatable_type => obj_type,
                       :source_type => source_type,
                       :source_id => source_id )
               .order(:updated_at => :desc)
-          #TODO: options[:include] = [ :value ] if include_values
         end
       end
 
@@ -73,12 +72,13 @@ module Annotations
           obj_type = self.class.base_class.name
 
           Tate::Annotation
+          .includes(:value)
           .joins(:attribute_)
           .where( :annotatable_type => obj_type,
                   :annotatable_id => self.id)
           .order(:updated_at => :desc)
           .limit(limit)
-          #TODO: options[:include] = [ :value ] if include_values
+
 
         end
 
@@ -89,12 +89,13 @@ module Annotations
           return [] if attrib.blank?
           obj_type = self.class.base_class.name
           Tate::Annotation
+              .includes(:value)
               .joins(:attribute_)
               .where( :annotatable_type => obj_type,
                       :annotatable_id => self.id,
                       :tate_annotation_attributes => { :name => attrib.strip } )
               .order(:updated_at => :desc)
-          #TODO: options[:include] = [ :value ] if include_values
+
         end
 
         # Same as the {obj}.annotations_with_attribute method (above) but
@@ -105,12 +106,13 @@ module Annotations
           return [] if attribs.blank?
           obj_type = self.class.base_class.name
           Tate::Annotation
+              .includes(:value)
               .joins(:attribute_)
               .where( :annotatable_type => obj_type,
                        :annotatable_id => self.id,
                        :tate_annotation_attributes => { :name => attribs } )
               .order(:updated_at => :desc)
-          #TODO: options[:include] = [ :value ] if include_values
+
         end
 
         # Finder to get annotations with a specific attribute by a specific source.
@@ -123,6 +125,7 @@ module Annotations
           obj_type = self.class.base_class.name
 
           Tate::Annotation
+            .includes(:value)
             .joins(:attribute_)
             .where(
                 :annotatable_type => obj_type,
@@ -131,7 +134,7 @@ module Annotations
                 :source_id => source.id,
                 :tate_annotation_attributes =>  { :name => attrib.strip }
             ).order(:updated_at => :desc)
-            #TODO: options[:include] = [ :value ] if include_values
+
         end
 
         # Finder to get all annotations on this object excluding those that
@@ -144,13 +147,12 @@ module Annotations
 
           obj_type = self.class.base_class.name
         Tate::Annotation
+          .includes(:value)
           .joins(:attribute_)
           .where(:annotatable_type => obj_type,
                  :annotatable_id => id)
           .where.not(:tate_annotation_attributes => {:name => attribs})
           .order(:updated_at => :desc)
-
-         #options[:include] = [ :value ] if include_values
         end
 
         # Returns the number of annotations on this annotatable object by the source type specified.
