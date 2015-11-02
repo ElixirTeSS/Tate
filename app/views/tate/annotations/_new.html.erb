@@ -6,8 +6,8 @@
       Annotatable Type: <%= f.text_field :annotatable_type, :value => @new_annotation.annotatable.class, :readonly=>'True' %><br>
       Annotatable ID: <%= f.text_field :annotatable_id, :value => @new_annotation.annotatable.id, :readonly=>'True' %><br>
       <br>
-      Source Type: <%= f.text_field :source_type, :value => @current_user.class, :readonly=>'True' %><br>
-      Source ID: <%= f.text_field :source_id, :value => @current_user.id, :readonly=>'True' %><br>
+      Source Type: <%= f.text_field :source_type, :value => current_user.class, :readonly=>'True' %><br>
+      Source ID: <%= f.text_field :source_id, :value => current_user.id, :readonly=>'True' %><br>
       <br>
       Attribute Name: <%= f.text_field :attribute_ %><br>
       Annotation Value: <%= f.text_field :value %><br>
